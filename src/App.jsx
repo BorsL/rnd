@@ -41,7 +41,7 @@ const Container = ({ children, onDrop }) => {
   );
 };
 
-const DraggableItem = ({ item, onDragStop, onResize }) => {
+const DraggableItem = ({ item, onDragStop, onResize, onRemove }) => {
   return (
     <Rnd
       size={{ width: item.width, height: item.height }}
@@ -55,6 +55,7 @@ const DraggableItem = ({ item, onDragStop, onResize }) => {
       <div
         className="w-full h-full bg-blue-200 flex items-center justify-center cursor-move"
         style={{ fontSize: `${Math.min(item.width, item.height) / 3}px` }}
+        onDoubleClick={() => onRemove(item.id)}
       >
         {item.type}
       </div>
@@ -89,6 +90,10 @@ const App = () => {
     setItems(prev => prev.map(item => item.id === itemId ? { ...item, width, height, x, y } : item));
   };
 
+  const handleRemove = (itemId) => {
+    setItems(prev => prev.filter(item => item.id !== itemId));
+  };
+
   return (
     <div className="flex">
       <div className="w-[200px] p-2.5 border-r border-gray-300">
@@ -104,6 +109,7 @@ const App = () => {
               item={item}
               onDragStop={handleDragStop}
               onResize={handleResizeStop}
+              onRemove={handleRemove}
             />
           ))}
         </Container>
